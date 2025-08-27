@@ -1,0 +1,3 @@
+pygame @ file:///home/conda/feedstock_root/build_artifacts/pygame_1727636417463/work
+setuptools==78.1.1
+wheel==0.45.1

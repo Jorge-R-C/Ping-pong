@@ -1,0 +1,57 @@
+# 🏓 Pong (Pygame) — Versión Final
+
+Proyecto de práctica en **Python + Pygame**. Juego Pong con paleta izquierda controlada por el jugador y paleta derecha controlada por **bot**.
+
+---
+
+## 🎯 Objetivo del juego
+Evitar que la pelota pase tu paleta. Cada vez que el rival falla, sumás un punto. Al alcanzar el puntaje objetivo se muestra el ganador y el juego finaliza de forma correcta.
+
+---
+
+## 🕹️ Controles
+- **Jugador (paleta izquierda):**
+  - `W` → subir
+  - `S` → bajar
+
+> La **paleta derecha** está controlada por un **bot**, no por el teclado.
+
+---
+
+## ⚠️ Problemas detectados en la versión anterior y cómo se solucionaron
+
+### 1) Conflicto entre `vel_x`/`vel_y` y `vel_pelota`
+**Qué pasaba:** el código usaba a la vez variables sueltas (`vel_x`, `vel_y`) y una lista `vel_pelota = [vx, vy]`. Eso generaba **desincronización**: a veces se modificaban `vel_x/vel_y`, otras `vel_pelota`, provocando **aceleraciones inesperadas** y comportamiento errático.
+
+**Solución aplicada:**
+- Se **eliminaron** las globales `vel_x` y `vel_y`.
+- Se usó **solo** `vel_pelota = [vx, vy]` en todo el juego.
+- Se corrigió el uso por ejes:
+  - Movimiento:  
+    ```python
+    pelota.x += vel_pelota[0]  # vx
+    pelota.y += vel_pelota[1]  # vy
+    ```
+  - Rebote en **techo/piso** (eje **Y**):  
+    ```python
+    vel_pelota[1] *= -1
+    ```
+  - Rebote en **paletas** (eje **X**):  
+    ```python
+    vel_pelota[0] *= -1
+    ```
+
+> Resultado: velocidad coherente y sin “aceleraciones fantasma”.
+
+---
+
+### 2) El juego no terminaba bien al haber ganador (bucle “pegado” al cartel)
+**Qué pasaba:** se pintaba el cartel del ganador pero el **bucle principal seguía corriendo**, dejando el letrero “congelado” indefinidamente.
+
+**Solución aplicada:**
+- En `ganador()` ahora se hace:
+  ```python
+  ejecutando = False  # se corta el while principal
+
+Ejecucion del proyecto:
+python src/main.py
